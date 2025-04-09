@@ -1,0 +1,9 @@
+{
+  "docs": [
+    ".cursor/tech-stack.md",
+    ".cursor/architecture.md",
+    ".cursor/auth-model.md",
+    ".cursor/db-schema.md",
+    ".cursor/deployment.md"
+  ]
+}

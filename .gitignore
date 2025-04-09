@@ -1,0 +1,13 @@
+# .gitignore
+
+# Node
+node_modules/
+.env.local
+.next/
+dist/
+.DS_Store
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
