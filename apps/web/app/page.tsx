@@ -1,8 +1,8 @@
-'use client'
-import useStore from '@/store/useStore'
+'use client';
+import useStore from '../store/useStore';
 
 export default function Page() {
-  const { count, increment, decrement } = useStore()
+  const { count, increment, decrement } = useStore();
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen gap-4 text-white bg-gradient-to-r from-purple-500 to-pink-500">
@@ -22,5 +22,5 @@ export default function Page() {
         </button>
       </div>
     </div>
-  )
+  );
 }

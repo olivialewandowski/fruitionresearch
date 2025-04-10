@@ -1,1 +1,6 @@
-export async function POST(req) { const body = await req.json(); return new Response(JSON.stringify({ status: 'sent' })); }
+import { NextRequest } from 'next/server';
+
+export async function POST(req: NextRequest) {
+  const body = await req.json();
+  return new Response(JSON.stringify({ status: 'sent' }));
+}

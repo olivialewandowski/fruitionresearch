@@ -1,1 +1,3 @@
-export default function MessageItem() { return null; }
+export default function MessageItem() {
+  return null;
+}

@@ -1,1 +1,3 @@
-export default function ChatList() { return null; }
+export default function ChatList() {
+  return null;
+}

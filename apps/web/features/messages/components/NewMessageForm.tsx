@@ -1,1 +1,3 @@
-export default function NewMessageForm() { return null; }
+export default function NewMessageForm() {
+  return null;
+}
