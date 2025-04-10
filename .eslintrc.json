@@ -1,0 +1,12 @@
+{
+  "extends": ["next/core-web-vitals"],
+  "root": true,
+  "settings": {
+    "next": {
+      "rootDir": "apps/web"
+    }
+  },
+  "rules": {
+    // Add any custom ESLint rules here
+  }
+}
