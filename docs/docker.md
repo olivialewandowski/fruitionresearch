@@ -1,118 +1,139 @@
-# Docker Setup Guide
+# Docker Quick Reference Guide
 
-This document outlines the Docker configuration for our project, including development and production environments.
+## Essential Commands
 
-## Overview
+# only restart doicker when
 
-We use Docker for both development and production environments, with separate configurations optimized for each use case. The setup includes:
+- you install new dependencies/npm packages
+- you changed docker configuration or docker-related files
+- you changed enviroment variables
 
-- Multi-stage builds for production
-- Development environment with hot-reloading
-- Volume mounts for efficient development
-- Security best practices
-- Health checks for production
+# best practice workflow:
 
-## Development
+- start dev enviroment once at beginning of work session using:
+  docker compose up web-dev
 
-To start the development environment:
+### Development
 
 ```bash
+# Start development environment
 docker compose up web-dev
+
+# Stop development environment
+docker compose down
+
+# Rebuild development container (after package.json changes)
+docker compose build web-dev
 ```
 
-This will:
-- Build the development container
-- Mount your local code into the container
-- Enable hot-reloading
-- Expose port 3000
-
-## Production
-
-To run the production environment:
+### Production
 
 ```bash
+# Start production environment
 docker compose up web-prod
+
+# Stop production environment
+docker compose down
+
+# Rebuild production container
+docker compose build web-prod
 ```
 
-The production build:
-- Uses multi-stage builds to minimize image size
-- Implements security best practices
-- Includes health checks
-- Runs as a non-root user
+### General Commands
 
-## Environment Variables
+```bash
+# View logs
+docker compose logs -f
 
-Create a `.env` file in the root directory with:
+# View running containers
+docker compose ps
+
+# Clean up unused containers/images
+docker compose down --remove-orphans
+```
+
+## When to Use Each Command
+
+### Development Workflow
+
+1. Start your day:
+
+   ```bash
+   docker compose up web-dev
+   ```
+
+   - This starts your development environment
+   - Changes to your code will automatically reload
+   - Access your app at http://localhost:3000
+
+2. After installing new npm packages:
+
+   ```bash
+   docker compose build web-dev
+   docker compose up web-dev
+   ```
+
+3. End your day:
+   ```bash
+   docker compose down
+   ```
+
+### Production Workflow
+
+1. Deploy new version:
+
+   ```bash
+   docker compose build web-prod
+   docker compose up web-prod
+   ```
+
+2. Check production logs:
+   ```bash
+   docker compose logs -f web-prod
+   ```
+
+## Troubleshooting
+
+### Common Issues
+
+1. Port 3000 already in use:
+
+   ```bash
+   # Find process using port 3000
+   lsof -i :3000
+   # Kill the process or change port in docker-compose.yml
+   ```
+
+2. Container won't start:
+
+   ```bash
+   # Clean everything and start fresh
+   docker compose down
+   docker compose build --no-cache
+   docker compose up web-dev
+   ```
+
+3. Node modules issues:
+   ```bash
+   # Remove node_modules volume and rebuild
+   docker compose down -v
+   docker compose up web-dev
+   ```
+
+## Environment Setup
+
+1. Create `.env` file in project root:
 
 ```env
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_key
 ```
 
-## Best Practices
-
-1. **Development**:
-   - Use `docker compose up web-dev` for local development
-   - Changes to your local files will be reflected immediately
-   - Node modules are cached in a Docker volume
-
-2. **Production**:
-   - Use `docker compose up web-prod` for production-like environment
-   - The build process is optimized for production
-   - Includes health checks and automatic restarts
-
-3. **Security**:
-   - All containers run as non-root users
-   - Production builds use multi-stage builds
-   - Sensitive environment variables are passed through `.env`
-
-4. **Performance**:
-   - Development uses volume mounts for fast file access
-   - Production uses optimized multi-stage builds
-   - Node modules are properly cached
-
-## Common Commands
+2. First time setup:
 
 ```bash
-# Start development environment
-docker compose up web-dev
-
-# Start production environment
-docker compose up web-prod
-
-# Rebuild containers
 docker compose build
-
-# View logs
-docker compose logs -f
-
-# Stop all containers
-docker compose down
+docker compose up web-dev
 ```
 
-## Troubleshooting
-
-1. **Port Conflicts**:
-   - If port 3000 is already in use, modify the port mapping in `docker-compose.yml`
-
-2. **Build Issues**:
-   - Clear Docker cache: `docker builder prune`
-   - Rebuild from scratch: `docker compose build --no-cache`
-
-3. **Volume Issues**:
-   - Reset volumes: `docker compose down -v`
-   - Rebuild: `docker compose up --build`
-
-## Contributing
-
-When adding new dependencies:
-1. Update `package.json`
-2. Rebuild the containers: `docker compose build`
-3. Restart the environment: `docker compose up`
-
-## CI/CD Integration
-
-The Docker setup is designed to work seamlessly with our CI/CD pipeline:
-- Production builds use the multi-stage Dockerfile
-- Health checks ensure deployment success
-- Environment variables are managed through CI/CD secrets 
+> Note: Always use `web-dev` for development and `web-prod` for production-like environments.
