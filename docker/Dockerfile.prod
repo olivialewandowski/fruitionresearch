@@ -1,27 +1,28 @@
 # Build stage
 FROM node:18-alpine AS builder
 
+# Set working directory
 WORKDIR /app
 
-# Copy root package files
+# First, copy only the root workspace files
 COPY package*.json ./
+COPY turbo.json ./
+COPY tsconfig.json ./
 
-# Create apps/web directory and copy its package files
-RUN mkdir -p apps/web
+# Copy the web app package files
 COPY apps/web/package*.json ./apps/web/
+COPY apps/web/tsconfig.json ./apps/web/
 
-# Install dependencies at root level first
-RUN npm ci
+# Copy shared packages if they exist
+COPY packages/ ./packages/
 
-# Install dependencies for apps/web
-WORKDIR /app/apps/web
-RUN npm ci
+# Install dependencies
+RUN npm install
 
-# Copy all source files
-WORKDIR /app
+# Copy the rest of the source code
 COPY . .
 
-# Build the application
+# Build the web application
 WORKDIR /app/apps/web
 RUN npm run build
 
@@ -36,8 +37,8 @@ COPY --from=builder /app/apps/web/.next ./.next
 COPY --from=builder /app/apps/web/public ./public
 COPY --from=builder /app/apps/web/next.config.js ./
 
-# Install only production dependencies
-RUN npm ci --only=production
+# Install production dependencies
+RUN npm install --production
 
 # Set environment variables
 ENV NODE_ENV=production
