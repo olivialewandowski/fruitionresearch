@@ -10,13 +10,13 @@ export default function Page() {
       <div className="flex gap-4">
         <button
           onClick={increment}
-          className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded"
+          className="bg-green-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
         >
           +
         </button>
         <button
           onClick={decrement}
-          className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+          className="bg-red-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded"
         >
           -
         </button>
