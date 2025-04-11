@@ -9,27 +9,13 @@ COPY package*.json ./
 COPY postcss.config.js ./
 COPY tailwind.config.js ./
 
-# Force install secure version of cross-spawn first
+# Install dependencies
 RUN npm install cross-spawn@7.0.5 --save-exact && \
     npm install && \
-    npm install tailwindcss@latest @tailwindcss/postcss postcss autoprefixer
-
-# Set up web app
-WORKDIR /app/apps/web
-
-# Copy the web app package files
-COPY apps/web/package*.json ./
-
-# Install web app dependencies
-RUN npm install cross-spawn@7.0.5 --save-exact && \
-    npm install
+    npm install tailwindcss@4.0.0 @tailwindcss/postcss --save-exact
 
 # Copy the rest of the source code
-WORKDIR /app
 COPY . .
-
-# Ensure public directory exists
-RUN mkdir -p /app/apps/web/public
 
 # Build the web application
 WORKDIR /app/apps/web
@@ -39,26 +25,23 @@ RUN npm run build
 # Production stage
 FROM node:18-alpine AS runner
 
-# Set up directory structure
+# Set working directory
 WORKDIR /app
-RUN mkdir -p apps/web/public
 
 # Copy necessary files from builder
 COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/apps/web/package*.json ./apps/web/
 COPY --from=builder /app/apps/web/.next ./apps/web/.next/
-COPY --from=builder /app/apps/web/public/ ./apps/web/public/
+COPY --from=builder /app/apps/web/public ./apps/web/public/
 COPY --from=builder /app/apps/web/next.config.js ./apps/web/
 COPY --from=builder /app/postcss.config.js ./
 COPY --from=builder /app/tailwind.config.js ./
+COPY --from=builder /app/apps/web/app ./apps/web/app/
 
-# Install production dependencies with forced secure version
+# Install production dependencies
 RUN npm install cross-spawn@7.0.5 --save-exact && \
     npm install --omit=dev && \
-    cd apps/web && \
-    npm install cross-spawn@7.0.5 --save-exact && \
-    npm install --omit=dev && \
-    npm install tailwindcss@latest @tailwindcss/postcss postcss autoprefixer --omit=dev
+    npm install tailwindcss@4.0.0 @tailwindcss/postcss --save-exact --omit=dev
 
 # Set environment variables
 ENV NODE_ENV=production
@@ -67,6 +50,6 @@ ENV NEXT_TELEMETRY_DISABLED=1
 
 EXPOSE 3000
 
-# Start the application from the correct directory
-WORKDIR /app
+# Start the application
+WORKDIR /app/apps/web
 CMD ["npm", "start"] 
