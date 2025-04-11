@@ -1,54 +1,42 @@
-# Stage 1: Dependencies
-FROM node:18-alpine AS deps
-WORKDIR /app
-
-# Install dependencies
-COPY package*.json ./
-COPY apps/web/package*.json ./apps/web/
-RUN npm ci
-
-# Stage 2: Builder
+# Build stage
 FROM node:18-alpine AS builder
+
 WORKDIR /app
 
-# Copy dependencies and source code
-COPY --from=deps /app/node_modules ./node_modules
-COPY --from=deps /app/apps/web/node_modules ./apps/web/node_modules
+# Copy root package files
+COPY package*.json ./
+
+# Copy apps/web package files
+COPY apps/web/package*.json ./apps/web/
+
+# Install dependencies at root and apps/web level
+RUN npm ci && cd apps/web && npm ci
+
+# Copy all source files
 COPY . .
 
-# Set Next.js environment
-ENV NEXT_TELEMETRY_DISABLED 1
-ENV NODE_ENV production
-
-# Build the Next.js application
+# Build the application
 WORKDIR /app/apps/web
 RUN npm run build
 
-# Stage 3: Runner
+# Production stage
 FROM node:18-alpine AS runner
+
 WORKDIR /app
 
-# Add non-root user
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
-
 # Copy necessary files from builder
+COPY --from=builder /app/apps/web/package*.json ./
+COPY --from=builder /app/apps/web/.next ./.next
 COPY --from=builder /app/apps/web/public ./public
-COPY --from=builder /app/apps/web/.next/standalone ./
-COPY --from=builder /app/apps/web/.next/static ./.next/static
+COPY --from=builder /app/apps/web/next.config.js ./
 
-# Set correct permissions
-RUN chown -R nextjs:nodejs /app
-
-# Switch to non-root user
-USER nextjs
-
-# Expose port
-EXPOSE 3000
+# Install only production dependencies
+RUN npm ci --only=production
 
 # Set environment variables
-ENV NODE_ENV production
-ENV NEXT_TELEMETRY_DISABLED 1
+ENV NODE_ENV=production
+ENV PORT=3000
 
-# Start the application
-CMD ["node", "server.js"] 
+EXPOSE 3000
+
+CMD ["npm", "start"] 
