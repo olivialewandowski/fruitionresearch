@@ -9,8 +9,10 @@ COPY package*.json ./
 COPY postcss.config.js ./
 COPY tailwind.config.js ./
 
-# Install root dependencies and new Tailwind CSS
-RUN npm install && npm install tailwindcss@latest @tailwindcss/postcss postcss autoprefixer
+# Force install secure version of cross-spawn first
+RUN npm install cross-spawn@7.0.5 --save-exact && \
+    npm install && \
+    npm install tailwindcss@latest @tailwindcss/postcss postcss autoprefixer
 
 # Set up web app
 WORKDIR /app/apps/web
@@ -19,7 +21,8 @@ WORKDIR /app/apps/web
 COPY apps/web/package*.json ./
 
 # Install web app dependencies
-RUN npm install
+RUN npm install cross-spawn@7.0.5 --save-exact && \
+    npm install
 
 # Copy the rest of the source code
 WORKDIR /app
@@ -49,9 +52,12 @@ COPY --from=builder /app/apps/web/next.config.js ./apps/web/
 COPY --from=builder /app/postcss.config.js ./
 COPY --from=builder /app/tailwind.config.js ./
 
-# Install production dependencies
-RUN npm install --omit=dev && \
-    cd apps/web && npm install --omit=dev && \
+# Install production dependencies with forced secure version
+RUN npm install cross-spawn@7.0.5 --save-exact && \
+    npm install --omit=dev && \
+    cd apps/web && \
+    npm install cross-spawn@7.0.5 --save-exact && \
+    npm install --omit=dev && \
     npm install tailwindcss@latest @tailwindcss/postcss postcss autoprefixer --omit=dev
 
 # Set environment variables
