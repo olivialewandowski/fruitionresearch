@@ -2,14 +2,20 @@
 FROM node:18-alpine AS builder
 WORKDIR /app
 
-# Copy package files
+# Copy root package files
 COPY package*.json ./
-COPY apps/web/package*.json ./apps/web/
+
+# Create apps/web directory and copy its package files
+RUN mkdir -p apps/web
+COPY apps/web/package*.json apps/web/
 
 # Install dependencies
 RUN npm ci
+WORKDIR /app/apps/web
+RUN npm ci
 
-# Copy source code
+# Copy source files
+WORKDIR /app
 COPY . .
 
 # Build the application
