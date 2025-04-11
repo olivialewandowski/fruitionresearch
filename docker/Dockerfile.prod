@@ -10,7 +10,7 @@ COPY postcss.config.js ./
 COPY tailwind.config.js ./
 
 # Install root dependencies and new Tailwind CSS
-RUN npm install && npm install tailwindcss@latest postcss autoprefixer
+RUN npm install && npm install tailwindcss@latest @tailwindcss/postcss postcss autoprefixer
 
 # Set up web app
 WORKDIR /app/apps/web
@@ -44,7 +44,7 @@ COPY --from=builder /app/postcss.config.js ./
 COPY --from=builder /app/tailwind.config.js ./
 
 # Install production dependencies including Tailwind
-RUN npm install --omit=dev && npm install tailwindcss@latest postcss autoprefixer --omit=dev
+RUN npm install --omit=dev && npm install tailwindcss@latest @tailwindcss/postcss postcss autoprefixer --omit=dev
 
 # Set environment variables
 ENV NODE_ENV=production
