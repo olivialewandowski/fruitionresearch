@@ -9,18 +9,25 @@ COPY package*.json ./
 COPY postcss.config.js ./
 COPY tailwind.config.js ./
 
-# Copy the web app package files
-COPY apps/web/package*.json ./apps/web/
+# Install root dependencies
+RUN npm install
 
-# Install ALL dependencies (including devDependencies)
+# Set up web app
+WORKDIR /app/apps/web
+
+# Copy the web app package files
+COPY apps/web/package*.json ./
+
+# Install web app dependencies
 RUN npm install
 
 # Copy the rest of the source code
+WORKDIR /app
 COPY . .
 
 # Build the web application
 WORKDIR /app/apps/web
-ENV NEXT_TELEMETRY_DISABLED 1
+ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run build
 
 # Production stage
@@ -42,7 +49,7 @@ RUN npm install --omit=dev
 # Set environment variables
 ENV NODE_ENV=production
 ENV PORT=3000
-ENV NEXT_TELEMETRY_DISABLED 1
+ENV NEXT_TELEMETRY_DISABLED=1
 
 EXPOSE 3000
 
