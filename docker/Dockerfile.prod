@@ -4,18 +4,24 @@ WORKDIR /app
 
 # Install dependencies
 COPY package*.json ./
+COPY apps/web/package*.json ./apps/web/
 RUN npm ci
 
 # Stage 2: Builder
 FROM node:18-alpine AS builder
 WORKDIR /app
 
-# Copy dependencies from deps stage
+# Copy dependencies and source code
 COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/apps/web/node_modules ./apps/web/node_modules
 COPY . .
 
-# Build application
+# Set Next.js environment
 ENV NEXT_TELEMETRY_DISABLED 1
+ENV NODE_ENV production
+
+# Build the Next.js application
+WORKDIR /app/apps/web
 RUN npm run build
 
 # Stage 3: Runner
@@ -27,9 +33,9 @@ RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
 # Copy necessary files from builder
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next/standalone ./
-COPY --from=builder /app/.next/static ./.next/static
+COPY --from=builder /app/apps/web/public ./public
+COPY --from=builder /app/apps/web/.next/standalone ./
+COPY --from=builder /app/apps/web/.next/static ./.next/static
 
 # Set correct permissions
 RUN chown -R nextjs:nodejs /app
