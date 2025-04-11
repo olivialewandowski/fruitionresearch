@@ -9,8 +9,8 @@ COPY package*.json ./
 COPY postcss.config.js ./
 COPY tailwind.config.js ./
 
-# Install root dependencies
-RUN npm install
+# Install root dependencies and new Tailwind CSS
+RUN npm install && npm install tailwindcss@latest @tailwindcss/postcss
 
 # Set up web app
 WORKDIR /app/apps/web
@@ -43,8 +43,8 @@ COPY --from=builder /app/apps/web/next.config.js ./
 COPY --from=builder /app/postcss.config.js ./
 COPY --from=builder /app/tailwind.config.js ./
 
-# Install only production dependencies
-RUN npm install --omit=dev
+# Install production dependencies including Tailwind
+RUN npm install --omit=dev && npm install tailwindcss@latest @tailwindcss/postcss --omit=dev
 
 # Set environment variables
 ENV NODE_ENV=production
