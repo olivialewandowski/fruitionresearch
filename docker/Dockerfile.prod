@@ -6,13 +6,19 @@ WORKDIR /app
 # Copy root package files
 COPY package*.json ./
 
-# Copy apps/web package files
+# Create apps/web directory and copy its package files
+RUN mkdir -p apps/web
 COPY apps/web/package*.json ./apps/web/
 
-# Install dependencies at root and apps/web level
-RUN npm ci && cd apps/web && npm ci
+# Install dependencies at root level first
+RUN npm ci
+
+# Install dependencies for apps/web
+WORKDIR /app/apps/web
+RUN npm ci
 
 # Copy all source files
+WORKDIR /app
 COPY . .
 
 # Build the application
