@@ -1,30 +1,24 @@
-# Stage 1: Dependencies
-FROM node:18-alpine AS deps
-WORKDIR /app
-
-# Install dependencies
-COPY package*.json ./
-COPY apps/web/package*.json ./apps/web/
-RUN npm ci
-
-# Stage 2: Builder
+# Stage 1: Dependencies and Build
 FROM node:18-alpine AS builder
 WORKDIR /app
 
-# Copy dependencies and source code
-COPY --from=deps /app/node_modules ./node_modules
-COPY --from=deps /app/apps/web/node_modules ./apps/web/node_modules
+# Copy package files
+COPY package*.json ./
+COPY apps/web/package*.json ./apps/web/
+
+# Install dependencies
+RUN npm ci
+
+# Copy source code
 COPY . .
 
-# Set Next.js environment
+# Build the application
 ENV NEXT_TELEMETRY_DISABLED 1
 ENV NODE_ENV production
-
-# Build the Next.js application
 WORKDIR /app/apps/web
 RUN npm run build
 
-# Stage 3: Runner
+# Stage 2: Production
 FROM node:18-alpine AS runner
 WORKDIR /app
 
@@ -32,21 +26,19 @@ WORKDIR /app
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# Copy necessary files from builder
+# Copy built application
 COPY --from=builder /app/apps/web/public ./public
 COPY --from=builder /app/apps/web/.next/standalone ./
 COPY --from=builder /app/apps/web/.next/static ./.next/static
 
-# Set correct permissions
+# Set permissions
 RUN chown -R nextjs:nodejs /app
 
 # Switch to non-root user
 USER nextjs
 
-# Expose port
+# Expose port and set env
 EXPOSE 3000
-
-# Set environment variables
 ENV NODE_ENV production
 ENV NEXT_TELEMETRY_DISABLED 1
 
