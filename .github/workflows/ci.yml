@@ -80,6 +80,10 @@ jobs:
     name: Docker Build & Scan
     runs-on: ubuntu-latest
     needs: [validate, security]
+    permissions:
+      contents: read
+      packages: read
+      security-events: write
     steps:
       - uses: actions/checkout@v3
       
@@ -92,6 +96,7 @@ jobs:
           context: .
           file: ./docker/Dockerfile.prod
           push: false
+          load: true
           tags: fruitionresearch:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
