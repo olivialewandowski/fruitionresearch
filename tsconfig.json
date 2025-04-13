@@ -18,7 +18,9 @@
     "paths": {
       "@shared/*": ["packages/shared/*"],
       "@logger/*": ["packages/logger/*"]
-    }
+    },
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
   },
   "include": ["apps", "packages"]
 }
