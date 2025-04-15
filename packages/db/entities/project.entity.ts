@@ -1,4 +1,13 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, JoinColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  OneToMany,
+  JoinColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { Organization } from './organization.entity';
 import { User } from './user.entity';
 import { ProjectTag } from './project-tag.entity';
@@ -20,7 +29,9 @@ export class Project {
   @Column({ nullable: true })
   organization_id?: string;
 
-  @ManyToOne(() => Organization, organization => organization.projects, { nullable: true })
+  @ManyToOne(() => Organization, organization => organization.projects, {
+    nullable: true,
+  })
   @JoinColumn({ name: 'organization_id' })
   organization?: Organization;
 

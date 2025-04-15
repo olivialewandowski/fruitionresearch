@@ -1,11 +1,19 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  JoinColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { Organization } from './organization.entity';
 import { User } from './user.entity';
 
 export enum AccessLevel {
   VIEWER = 'viewer',
   MANAGER = 'manager',
-  OWNER = 'owner'
+  OWNER = 'owner',
 }
 
 @Entity('organization_members')
@@ -29,7 +37,7 @@ export class OrganizationMember {
 
   @Column({
     type: 'enum',
-    enum: AccessLevel
+    enum: AccessLevel,
   })
   access_level: AccessLevel = AccessLevel.VIEWER;
 

@@ -1,4 +1,13 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, JoinColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  OneToMany,
+  JoinColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { Position } from './position.entity';
 import { User } from './user.entity';
 import { ApplicationAnswer } from './application-answer.entity';
@@ -8,7 +17,7 @@ export enum ApplicationStatus {
   INTERESTED = 'interested',
   NOT_INTERESTED = 'not_interested',
   ACCEPTED = 'accepted',
-  REJECTED = 'rejected'
+  REJECTED = 'rejected',
 }
 
 @Entity('applications')
@@ -36,7 +45,7 @@ export class Application {
   @Column({
     type: 'enum',
     enum: ApplicationStatus,
-    default: ApplicationStatus.PENDING
+    default: ApplicationStatus.PENDING,
   })
   status: ApplicationStatus = ApplicationStatus.PENDING;
 

@@ -1,4 +1,13 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, JoinColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  OneToMany,
+  JoinColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { Project } from './project.entity';
 import { Application } from './application.entity';
 import { ApplicationQuestion } from './application-question.entity';
@@ -7,14 +16,14 @@ import { UserSavedPosition } from './user-saved-position.entity';
 export enum PositionType {
   IN_PERSON = 'in_person',
   HYBRID = 'hybrid',
-  REMOTE = 'remote'
+  REMOTE = 'remote',
 }
 
 export enum PositionCompensationType {
   PAID = 'paid',
   VOLUNTEER = 'volunteer',
   WORK_STUDY = 'work_study',
-  COURSE_CREDIT = 'course_credit'
+  COURSE_CREDIT = 'course_credit',
 }
 
 @Entity('positions')
@@ -38,14 +47,14 @@ export class Position {
   @Column({
     type: 'enum',
     enum: PositionType,
-    array: true
+    array: true,
   })
   position_types: PositionType[] = [];
 
   @Column({
     type: 'enum',
     enum: PositionCompensationType,
-    array: true
+    array: true,
   })
   compensation_types: PositionCompensationType[] = [];
 

@@ -1,4 +1,13 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, JoinColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  OneToMany,
+  JoinColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { University } from './university.entity';
 import { User } from './user.entity';
 import { OrganizationMember } from './organization-member.entity';
@@ -10,7 +19,7 @@ export enum OrganizationType {
   LAB = 'lab',
   CENTER = 'center',
   PROGRAM = 'program',
-  DEPARTMENT = 'department'
+  DEPARTMENT = 'department',
 }
 
 @Entity('organizations')
@@ -30,7 +39,7 @@ export class Organization {
 
   @Column({
     type: 'enum',
-    enum: OrganizationType
+    enum: OrganizationType,
   })
   type: OrganizationType = OrganizationType.INITIATIVE;
 

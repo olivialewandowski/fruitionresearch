@@ -11,6 +11,10 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
+env:
+  NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+
 jobs:
   validate:
     name: Validate
@@ -26,6 +30,11 @@ jobs:
           
       - name: Install dependencies
         run: npm ci
+        
+      - name: Create .env.local file
+        run: |
+          echo "NEXT_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}" > apps/web/.env.local
+          echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}" >> apps/web/.env.local
         
       - name: Type check
         run: npm run type-check
@@ -89,6 +98,11 @@ jobs:
       
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
+      
+      - name: Create .env.docker file
+        run: |
+          echo "NEXT_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}" > apps/web/.env.docker
+          echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}" >> apps/web/.env.docker
         
       - name: Build Docker image
         uses: docker/build-push-action@v4
@@ -100,6 +114,9 @@ jobs:
           tags: fruitionresearch:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          build-args: |
+            NEXT_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+            NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
 
       # Run Trivy vulnerability scanner
       - name: Run Trivy vulnerability scanner
