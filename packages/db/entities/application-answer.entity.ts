@@ -1,4 +1,12 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  JoinColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { Application } from './application.entity';
 import { ApplicationQuestion } from './application-question.entity';
 
@@ -12,14 +20,14 @@ export class ApplicationAnswer {
 
   @ManyToOne(() => Application, application => application.answers)
   @JoinColumn({ name: 'application_id' })
-  application: Application = new(Application);
+  application: Application = new Application();
 
   @Column()
   question_id: string = '';
 
   @ManyToOne(() => ApplicationQuestion, question => question.answers)
   @JoinColumn({ name: 'question_id' })
-  question: ApplicationQuestion = new(ApplicationQuestion);
+  question: ApplicationQuestion = new ApplicationQuestion();
 
   @Column({ nullable: true })
   answer_text?: string;

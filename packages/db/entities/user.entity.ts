@@ -1,4 +1,14 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, OneToOne, JoinColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+  JoinColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { University } from './university.entity';
 import { StudentProfile } from './student-profile.entity';
 import { FacultyProfile } from './faculty-profile.entity';
@@ -13,7 +23,7 @@ import { UserSavedPosition } from './user-saved-position.entity';
 export enum UserRole {
   STUDENT = 'student',
   FACULTY = 'faculty',
-  ADMIN = 'admin'
+  ADMIN = 'admin',
 }
 
 @Entity('users')
@@ -35,7 +45,7 @@ export class User {
 
   @Column({
     type: 'enum',
-    enum: UserRole
+    enum: UserRole,
   })
   role: UserRole = UserRole.STUDENT;
 

@@ -2,8 +2,8 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuthStore } from '@/store/auth.store';
-import { Navbar } from '@/components/Navbar';
+import { useAuthStore } from '../../store/auth.store';
+import { Navbar } from '../../components/Navbar';
 
 export default function DashboardPage() {
   const { user, isLoading, initialized, error } = useAuthStore();
@@ -52,15 +52,18 @@ export default function DashboardPage() {
       <main className="flex-grow p-4 sm:p-6">
         <div className="max-w-7xl mx-auto">
           <h1 className="text-2xl font-bold text-gray-900 mb-6">Dashboard</h1>
-          
+
           <div className="bg-white shadow rounded-lg p-6">
-            <h2 className="text-lg font-medium text-gray-900 mb-4">Welcome, {user.email}</h2>
+            <h2 className="text-lg font-medium text-gray-900 mb-4">
+              Welcome, {user.email}
+            </h2>
             <p className="text-gray-600">
-              This is your dashboard where you'll manage your research projects and applications.
+              This is your dashboard where you&apos;ll manage your research
+              projects and applications.
             </p>
           </div>
         </div>
       </main>
     </div>
   );
-} 
+}

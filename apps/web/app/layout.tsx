@@ -4,16 +4,19 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Fruition Research',
-  description: 'AI-powered research marketplace and project management platform for NYU',
+  description:
+    'AI-powered research marketplace and project management platform for NYU',
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en">
       <body className="bg-white text-black">
-        <AuthProvider>
-          {children}
-        </AuthProvider>
+        <AuthProvider>{children}</AuthProvider>
       </body>
     </html>
   );

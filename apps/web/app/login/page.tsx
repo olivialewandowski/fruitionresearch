@@ -3,10 +3,10 @@
 import { useState, FormEvent } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { supabase } from '@/lib/supabase';
-import { Input } from '@/components/ui/Input';
-import { Button } from '@/components/ui/Button';
-import { Navbar } from '@/components/Navbar';
+import { supabase } from '../../lib/supabase';
+import { Input } from '../../components/ui/Input';
+import { Button } from '../../components/ui/Button';
+import { Navbar } from '../../components/Navbar';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -19,7 +19,7 @@ export default function LoginPage() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleLogin = async (e: FormEvent) => {
@@ -84,18 +84,14 @@ export default function LoginPage() {
               required
             />
 
-            <Button
-              type="submit"
-              isLoading={isLoading}
-              fullWidth
-            >
+            <Button type="submit" isLoading={isLoading} fullWidth>
               Log in
             </Button>
           </form>
 
           <div className="mt-6 text-sm text-center">
             <p className="text-gray-600">
-              Don't have an account?{' '}
+              Don&apos;t have an account?{' '}
               <Link
                 href="/signup"
                 className="font-medium text-blue-600 hover:text-blue-500"
@@ -108,4 +104,4 @@ export default function LoginPage() {
       </main>
     </div>
   );
-} 
+}

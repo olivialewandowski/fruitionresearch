@@ -3,29 +3,29 @@
 import { useState, FormEvent } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { supabase } from '@/lib/supabase';
-import { Input } from '@/components/ui/Input';
-import { Button } from '@/components/ui/Button';
-import { Navbar } from '@/components/Navbar';
+import { supabase } from '../../lib/supabase';
+import { Input } from '../../components/ui/Input';
+import { Button } from '../../components/ui/Button';
+import { Navbar } from '../../components/Navbar';
 
 // Password validation function
 const validatePassword = (password: string): string | null => {
   if (password.length < 8) {
     return 'Password must be at least 8 characters long';
   }
-  
+
   if (!/[A-Z]/.test(password)) {
     return 'Password must contain at least one uppercase letter';
   }
-  
+
   if (!/[a-z]/.test(password)) {
     return 'Password must contain at least one lowercase letter';
   }
-  
+
   if (!/\d/.test(password)) {
     return 'Password must contain at least one number';
   }
-  
+
   return null;
 };
 
@@ -42,13 +42,13 @@ export default function SignupPage() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-    
+    setFormData(prev => ({ ...prev, [name]: value }));
+
     // Validate password on change
     if (name === 'password') {
       setPasswordError(validatePassword(value));
     }
-    
+
     // Clear password match error when either field changes
     if (name === 'password' || name === 'confirmPassword') {
       if (error === 'Passwords do not match') {
@@ -60,7 +60,7 @@ export default function SignupPage() {
   const handleSignup = async (e: FormEvent) => {
     e.preventDefault();
     setError('');
-    
+
     // Validate password strength
     const passwordValidationError = validatePassword(formData.password);
     if (passwordValidationError) {
@@ -140,7 +140,8 @@ export default function SignupPage() {
             />
             {!passwordError && (
               <p className="text-xs text-gray-500 mt-1">
-                Password must be at least 8 characters with uppercase, lowercase, and numbers.
+                Password must be at least 8 characters with uppercase,
+                lowercase, and numbers.
               </p>
             )}
 
@@ -155,11 +156,7 @@ export default function SignupPage() {
               required
             />
 
-            <Button
-              type="submit"
-              isLoading={isLoading}
-              fullWidth
-            >
+            <Button type="submit" isLoading={isLoading} fullWidth>
               Sign up
             </Button>
           </form>
@@ -179,4 +176,4 @@ export default function SignupPage() {
       </main>
     </div>
   );
-} 
+}
