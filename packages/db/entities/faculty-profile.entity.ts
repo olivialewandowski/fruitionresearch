@@ -1,3 +1,4 @@
+// packages/db/entities/faculty-profile.entity.ts
 import {
   Entity,
   Column,

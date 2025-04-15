@@ -1,3 +1,4 @@
+// packages/db/entities/index.ts
 import { University } from './university.entity';
 import { User, UserRole } from './user.entity';
 import { StudentProfile } from './student-profile.entity';

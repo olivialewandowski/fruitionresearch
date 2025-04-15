@@ -1,3 +1,4 @@
+// packages/db/entities/user-preference.entity.ts
 import {
   Entity,
   Column,

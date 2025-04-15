@@ -1,3 +1,4 @@
+// packages/db/entities/project.entity.ts
 import {
   Entity,
   Column,
