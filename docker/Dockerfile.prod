@@ -6,22 +6,22 @@ WORKDIR /app
 
 # Copy package files first for better caching
 COPY package*.json ./
-COPY apps/web/package*.json ./apps/web/
 COPY postcss.config.js tailwind.config.js ./
 
 # Install dependencies
-RUN npm ci && \
-    cd apps/web && \
-    npm ci && \
-    cd ../.. && \
-    npm cache clean --force
+RUN npm ci
 
 # Copy source code
 COPY . .
 
-# Build the application
-WORKDIR /app/apps/web
+# Set dummy environment variables for build phase
+ENV NEXT_PUBLIC_SUPABASE_URL="https://dummy-url-for-build"
+ENV NEXT_PUBLIC_SUPABASE_ANON_KEY="dummy-key-for-build"
+ENV SUPABASE_SERVICE_ROLE_KEY="dummy-key-for-build"
+ENV SUPABASE_JWT_SECRET="dummy-secret-for-build"
 ENV NEXT_TELEMETRY_DISABLED=1
+
+# Build the application
 RUN npm run build
 
 # Production stage
@@ -38,18 +38,15 @@ WORKDIR /app
 
 # Copy only necessary files from builder
 COPY --from=builder --chown=nextjs:nodejs /app/package*.json ./
-COPY --from=builder --chown=nextjs:nodejs /app/apps/web/package*.json ./apps/web/
 COPY --from=builder --chown=nextjs:nodejs /app/apps/web/.next ./apps/web/.next/
-COPY --from=builder --chown=nextjs:nodejs /app/apps/web/public/ ./apps/web/public/
-COPY --from=builder --chown=nextjs:nodejs /app/apps/web/next.config.js ./apps/web/
+# Create public directory if it doesn't exist
+RUN mkdir -p /app/apps/web/public
+COPY --from=builder --chown=nextjs:nodejs /app/next.config.js ./apps/web/
 COPY --from=builder --chown=nextjs:nodejs /app/postcss.config.js ./
 COPY --from=builder --chown=nextjs:nodejs /app/tailwind.config.js ./
 
 # Install production dependencies
-RUN npm ci --omit=dev && \
-    cd apps/web && \
-    npm ci --omit=dev && \
-    npm cache clean --force
+RUN npm ci --omit=dev
 
 # Set environment variables
 ENV NODE_ENV=production
@@ -66,5 +63,4 @@ USER nextjs
 EXPOSE 3000
 
 # Start the application
-WORKDIR /app
 CMD ["npm", "start"] 

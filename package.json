@@ -1,8 +1,7 @@
 {
   "name": "fruitionresearch",
   "version": "1.0.0",
-  "description": "",
-  "main": "next.config.js",
+  "description": "Fruition Research Marketplace - An AI-powered research platform for NYU",
   "private": true,
   "scripts": {
     "dev": "node apps/web/scripts/validate-env.js && next dev ./apps/web",

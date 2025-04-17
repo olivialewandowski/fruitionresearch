@@ -12,7 +12,7 @@ export default function HomePage() {
             Fruition Research Marketplace
           </h1>
           <p className="text-xl text-gray-600 mb-8">
-            An AI-powered research marketplace and project management platform
+            An AI-powered research and project management platform
             for NYU that facilitates undergraduate research engagement.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
