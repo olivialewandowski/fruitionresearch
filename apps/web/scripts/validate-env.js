@@ -44,4 +44,4 @@ function validateEnv() {
   console.log('Environment validation passed');
 }
 
-validateEnv(); 
+validateEnv();
