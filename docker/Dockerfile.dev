@@ -10,10 +10,20 @@ WORKDIR /app
 
 # Install dependencies first (better caching)
 COPY package*.json ./
+COPY postcss.config.js tailwind.config.js ./
 RUN npm ci
+
+# Set dummy environment variables for build phase
+ENV NEXT_PUBLIC_SUPABASE_URL="https://dummy-url-for-build"
+ENV NEXT_PUBLIC_SUPABASE_ANON_KEY="dummy-key-for-build"
+ENV SUPABASE_SERVICE_ROLE_KEY="dummy-key-for-build"
+ENV SUPABASE_JWT_SECRET="dummy-secret-for-build"
 
 # Copy the rest of the application
 COPY . .
+
+# Create public directory if it doesn't exist
+RUN mkdir -p /app/apps/web/public
 
 # Set correct permissions
 RUN chown -R nextjs:nodejs /app
