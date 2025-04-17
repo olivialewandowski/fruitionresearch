@@ -11,10 +11,6 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
-env:
-  NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-  NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
-
 jobs:
   validate:
     name: Validate
@@ -35,6 +31,8 @@ jobs:
         run: |
           echo "NEXT_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}" > .env
           echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}" >> .env
+          echo "SUPABASE_SERVICE_ROLE_KEY=${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" >> .env
+          echo "SUPABASE_JWT_SECRET=${{ secrets.SUPABASE_JWT_SECRET }}" >> .env
         
       - name: Type check
         run: npm run type-check
@@ -66,13 +64,12 @@ jobs:
         run: npm audit
         continue-on-error: true
 
-      # Initialize CodeQL
+      # Initialize and run CodeQL Analysis
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v2
         with:
           languages: javascript, typescript
 
-      # Run CodeQL Analysis
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v2
 
