@@ -20,7 +20,10 @@ function validateEnv() {
   }
 
   // Validate URL format for Supabase URL
-  if (process.env.NEXT_PUBLIC_SUPABASE_URL && !process.env.NEXT_PUBLIC_SUPABASE_URL.startsWith('https://')) {
+  if (
+    process.env.NEXT_PUBLIC_SUPABASE_URL &&
+    !process.env.NEXT_PUBLIC_SUPABASE_URL.startsWith('https://')
+  ) {
     invalidVars.push('NEXT_PUBLIC_SUPABASE_URL must be a valid HTTPS URL');
   }
 
